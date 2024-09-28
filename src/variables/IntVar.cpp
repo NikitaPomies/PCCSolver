@@ -22,7 +22,8 @@ void IntVar::setUB(int value) { UB = value; }
 
 bool IntVar::isAssigned()
 {
-    return LB == UB;
+    //return LB == UB;
+    return values.setvalues.size()==1;
 }
 
 int IntVar::getValue()
@@ -33,12 +34,12 @@ int IntVar::getValue()
     }
     else
     {
-        return LB;
+       return *values.setvalues.begin();
     }
 }
 bool IntVar::contains(int value)
 {
-    return ((value >= LB) && (value <= UB) && (values.contains(value)));
+    return  (values.contains(value));
 }
 bool IntVar::updateLB(int value)
 {
@@ -82,14 +83,7 @@ bool IntVar::removeValue(int value)
     if (canremove)
     {
         this->values.remove(value);
-        if (value == this->getLB())
-        {
-            this->setLB(value);
-        }
-        else if (value == this->getUB())
-        {
-            this->setUB(value);
-        }
+
     }
     return canremove;
 }

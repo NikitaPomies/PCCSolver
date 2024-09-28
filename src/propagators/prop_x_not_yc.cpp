@@ -9,7 +9,6 @@ PropXnotYC::PropXnotYC(IntVar *i, IntVar *j, int c)
 
 void PropXnotYC::propagate()
 {
-    std::cout << "I was called";
     if (x->isAssigned())
     {
         bool removed = y->removeValue(x->getValue() - cste);

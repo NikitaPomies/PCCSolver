@@ -6,6 +6,7 @@
 #include "constraints/Constraint.h"
 #include "variables/IntVar.h"
 #include "propagators/prop_x_not_y.h"
+#include "propagators/prop_x_not_yc.h"
 using namespace std;
 
 class Model
@@ -13,7 +14,12 @@ class Model
 public:
     vector<IntVar> vars;
     // vector<Constraint> cstrs;
-    queue<BinaryPropagator *> propagator_queue;
+    vector<BinaryPropagator *> propagator_queue;
     // void initialize_propagation();
     void add_binary_cstr(IntVar *i, IntVar *j);
+    void add_binary_cstr2(IntVar *i, IntVar *j, int cste);
+    void propagate_constraints();
+    bool are_constraints_entailed();
+
+    bool solve();
 };
