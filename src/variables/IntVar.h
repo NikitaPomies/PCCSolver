@@ -8,6 +8,9 @@
 #include <functional>
 #include <iostream>
 #include <stdexcept>
+#include <set>
+
+#include "../utils/OrderedSet.h"
 
 // Variable class
 class IntVar
@@ -18,6 +21,7 @@ private:
     int UB;
 
 public:
+    OrderedSet values;
     std::string name;
 
     IntVar(const std::string &name, int lb, int ub);
@@ -26,6 +30,8 @@ public:
 
     int getValue();
 
+    void instantiateTo(int value);
+
     bool contains(int value);
     int getLB() const;
     int getUB() const;
@@ -33,6 +39,8 @@ public:
     void setUB(int value);
     bool updateLB(int value);
     bool updateUB(int value);
+    bool removeValue(int value);
+    std::string toString();
 
 };
 

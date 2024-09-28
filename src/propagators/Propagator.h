@@ -6,8 +6,8 @@ using namespace std;
 class BinaryPropagator
 {
 protected:
-    IntVar x;
-    IntVar y;
+    IntVar * x;
+    IntVar * y;
     string state = "NEW";
 
 public:

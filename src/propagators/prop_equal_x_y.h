@@ -1,14 +1,12 @@
 #pragma once
 #include "Propagator.h"
 
+class PropEqualXY : public BinaryPropagator
+{
 
-class PropEqualXY : public BinaryPropagator {
-
-    void propagate() override ;
+    PropEqualXY(IntVar *i, IntVar *j);
+    void propagate() override;
     bool isEntailed() override;
-    void updateBounds(){
 
-    }
-
-
-} ;
+    void updateBounds();
+};
