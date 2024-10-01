@@ -13,7 +13,7 @@ IntVar::IntVar(const std::string &name, int lb, int ub)
     {
         values.insert(i);
     }
-} // -1 indicates unassigned
+}
 
 int IntVar::getLB() const { return LB; }
 int IntVar::getUB() const { return UB; }
