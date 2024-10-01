@@ -7,10 +7,13 @@
 #include "variables/IntVar.h"
 #include "propagators/prop_x_not_y.h"
 #include "propagators/prop_x_not_yc.h"
+#include "decisions/selectors/minvalueselector.h"
+
 using namespace std;
 
 class Model
 {
+    MinValueSelector selector = MinValueSelector();
 public:
     vector<IntVar> vars;
     // vector<Constraint> cstrs;
