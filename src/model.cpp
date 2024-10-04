@@ -62,61 +62,69 @@ bool Model::solve()
     {
         return true;
     }
-    RandomVariableSelector varselector = RandomVariableSelector();
+    RandomVariableSelector varselector;
+    MinValueSelector valselector;
     // Select the first unassigned variable
     for (int i = 0; i < vars.size(); i++)
-    {   
-        try {
-        IntVar& var = varselector.selectVariable(vars);
-        
-
-        if (!var.isAssigned())
+    {
+        try
         {
-            std::set<int> backup_values = var.values.setvalues; // Backup the current domain
+            IntVar &var = varselector.selectVariable(vars);
 
-            // Backup the states of all other variables
-            std::vector<std::set<int>> backup_domains(vars.size());
-            for (size_t i = 0; i < vars.size(); ++i)
+            if (!var.isAssigned())
             {
-                backup_domains[i] = vars[i].values.setvalues;
-            }
+                std::set<int> backup_values = var.values.setvalues; // Backup the current domain
 
-            // Try each value in the domain
-            for (int val : backup_values)
-            {
-                // Assign the variable to this value
-                var.instantiateTo(val);
-
-                // Propagate constraints
-                propagate_constraints();
-
-                // Check for empty domains
-                bool valid = true;
-                for (auto &v : vars)
+                // Backup the states of all other variables
+                std::vector<std::set<int>> backup_domains(vars.size());
+                for (size_t i = 0; i < vars.size(); ++i)
                 {
-                    if (v.values.setvalues.empty())
+                    backup_domains[i] = vars[i].values.setvalues;
+                }
+
+                // Try each value in the domain
+                while (!backup_values.empty())
+
+                {
+                    int min_val = valselector.selectValue(&var);
+
+                    backup_values.erase(min_val);
+                    // Assign the variable to this value
+                    var.instantiateTo(min_val);
+
+                    // Propagate constraints
+                    propagate_constraints();
+
+                    // Check for empty domains
+                    bool valid = true;
+                    for (auto &v : vars)
                     {
-                        valid = false;
-                        break;
+                        if (v.values.setvalues.empty())
+                        {
+                            valid = false;
+                            break;
+                        }
+                    }
+
+                    if (valid && solve())
+                    { // Recur
+                        return true;
+                    }
+
+                    // Restore the variable's values and all affected domains
+                    var.values.setvalues = backup_values; // Restore current variable's values
+                    for (size_t i = 0; i < vars.size(); ++i)
+                    {
+                        if (&vars[i] != &var)
+                            vars[i].values.setvalues = backup_domains[i]; // Restore other variables' domains
                     }
                 }
 
-                if (valid && solve())
-                { // Recur
-                    return true;
-                }
-
-                // Restore the variable's values and all affected domains
-                var.values.setvalues = backup_values; // Restore current variable's values
-                for (size_t i = 0; i < vars.size(); ++i)
-                {
-                    vars[i].values.setvalues = backup_domains[i]; // Restore other variables' domains
-                }
+                return false; // Return false if no value works for the current variable
             }
-
-            return false; // Return false if no value works for the current variable
-        }}
-        catch(const std::runtime_error){
+        }
+        catch (const std::runtime_error)
+        {
             return false;
         }
     }
