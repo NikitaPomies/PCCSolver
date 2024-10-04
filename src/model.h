@@ -8,6 +8,7 @@
 #include "propagators/prop_x_not_y.h"
 #include "propagators/prop_x_not_yc.h"
 #include "decisions/selectors/minvalueselector.h"
+#include "decisions/selectors/variables/random.h"
 
 using namespace std;
 

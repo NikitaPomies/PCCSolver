@@ -56,7 +56,7 @@ int main()
     }
 
     Model model;
-    int n = 20;
+    int n = 25;
     // Step 1: Create variables for each row, each having domain 0 to n-1 (columns)
     for (int i = 0; i < n; i++)
     {

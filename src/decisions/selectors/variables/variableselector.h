@@ -1,10 +1,10 @@
 #pragma once
-#include "../../variables/IntVar.h"
+#include "../../../variables/IntVar.h"
 using namespace std;
 
 class VariableSelector
 {
 public:
-    virtual IntVar* selectVariable(vector<IntVar *> v) = 0;
+    virtual IntVar& selectVariable(vector<IntVar> &v) = 0;
     
 };

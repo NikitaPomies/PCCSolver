@@ -34,9 +34,12 @@ void Model::propagate_constraints()
     }
 }
 
-bool Model::are_constraints_entailed() {
-    for (const auto& prop : propagator_queue) {
-        if (!prop->isEntailed()) {
+bool Model::are_constraints_entailed()
+{
+    for (const auto &prop : propagator_queue)
+    {
+        if (!prop->isEntailed())
+        {
             return false; // Return false if any propagator is not entailed
         }
     }
@@ -59,10 +62,14 @@ bool Model::solve()
     {
         return true;
     }
-
+    RandomVariableSelector varselector = RandomVariableSelector();
     // Select the first unassigned variable
-    for (auto &var : vars)
-    {
+    for (int i = 0; i < vars.size(); i++)
+    {   
+        try {
+        IntVar& var = varselector.selectVariable(vars);
+        
+
         if (!var.isAssigned())
         {
             std::set<int> backup_values = var.values.setvalues; // Backup the current domain
@@ -108,6 +115,9 @@ bool Model::solve()
             }
 
             return false; // Return false if no value works for the current variable
+        }}
+        catch(const std::runtime_error){
+            return false;
         }
     }
 
