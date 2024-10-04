@@ -56,7 +56,7 @@ int main()
     }
 
     Model model;
-    int n = 25;
+    int n = 30;
     // Step 1: Create variables for each row, each having domain 0 to n-1 (columns)
     for (int i = 0; i < n; i++)
     {
@@ -81,7 +81,6 @@ int main()
     {
         cout << "Row " << i << " -> Column " << model.vars[i].getValue() << endl;
     }
-
 
 
     return 0;

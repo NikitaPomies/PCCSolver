@@ -62,7 +62,8 @@ bool Model::solve()
     {
         return true;
     }
-    RandomVariableSelector varselector;
+    //RandomVariableSelector varselector;
+    MostConstrainedVarSelector varselector;
     MinValueSelector valselector;
     // Select the first unassigned variable
     for (int i = 0; i < vars.size(); i++)
