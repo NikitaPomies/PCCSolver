@@ -5,7 +5,7 @@
 #include <functional>
 #include <iostream>
 #include <stdexcept>
-
+#include <cassert>
 #include "model.h"
 
 // void Model::initialize_propagation(){
@@ -15,6 +15,25 @@
 //         }
 //     }
 // };
+
+void Model::add_var(const string &name, int LB, int UB)
+{
+    this->vars.emplace_back(name, LB, UB, trail);
+}
+
+void Model::worldPush()
+{
+    worldIndex += 1;
+    std::vector<std::pair<IntVar *, int>> emptyVector;
+
+    // Push the empty vector onto the trailStack
+    trail.trailStack.push(emptyVector);
+}
+void Model::worldBack()
+{
+    worldIndex -= 1;
+    trail.backtrack();
+}
 
 void Model::add_binary_cstr(IntVar *i, IntVar *j)
 {
@@ -27,6 +46,7 @@ void Model::add_binary_cstr2(IntVar *i, IntVar *j, int cste)
     propagator_queue.push_back(new PropXnotYC(i, j, cste));
 }
 void Model::propagate_constraints()
+
 {
     for (auto prop : propagator_queue)
     {
@@ -40,6 +60,8 @@ bool Model::are_constraints_entailed()
     {
         if (!prop->isEntailed())
         {
+            //std::cout<<prop->x->name<<"  "<<prop->y->name<<std::endl;
+            //std::cout<<&prop->x<<"  "<<&prop->y->name<<std::endl;
             return false; // Return false if any propagator is not entailed
         }
     }
@@ -62,26 +84,33 @@ bool Model::solve()
     {
         return true;
     }
-    //RandomVariableSelector varselector;
+    if (allAssigned) {
+        std::cout<<"mauvaise assignation"<<std::endl;
+        return false;
+    }
+    // RandomVariableSelector varselector;
     MostConstrainedVarSelector varselector;
-    MinValueSelector valselector;
+    //MinValueSelector valselector;
+    RandomValueSelector valselector;
     // Select the first unassigned variable
     for (int i = 0; i < vars.size(); i++)
     {
         try
         {
             IntVar &var = varselector.selectVariable(vars);
+            //if (&var == nullptr) return false;
 
             if (!var.isAssigned())
             {
                 std::set<int> backup_values = var.values.setvalues; // Backup the current domain
 
                 // Backup the states of all other variables
-                std::vector<std::set<int>> backup_domains(vars.size());
-                for (size_t i = 0; i < vars.size(); ++i)
-                {
-                    backup_domains[i] = vars[i].values.setvalues;
-                }
+                /*    std::vector<std::set<int>> backup_domains(vars.size());
+                   for (size_t i = 0; i < vars.size(); ++i)
+                   {
+                       backup_domains[i] = vars[i].values.setvalues;
+                   } */
+                std::set<int> var_domain_backup = var.values.setvalues;
 
                 // Try each value in the domain
                 while (!backup_values.empty())
@@ -91,8 +120,11 @@ bool Model::solve()
 
                     backup_values.erase(min_val);
                     // Assign the variable to this value
-                    var.instantiateTo(min_val);
 
+                    int trailLevel = trail.getCurrentLevel();
+
+                    var.instantiateTo(min_val);
+                    worldPush();
                     // Propagate constraints
                     propagate_constraints();
 
@@ -107,20 +139,41 @@ bool Model::solve()
                         }
                     }
 
+                    bool alltest = true;
+                    for (auto &var : vars)
+                    {
+                        if (!var.isAssigned())
+                        {
+                            alltest = false;
+                            break;
+                        }
+                    }
+                    /* if (alltest)
+                    {
+                        bool check = are_constraints_entailed();
+                        std::cout << check << std::endl;
+                    }; */
+
                     if (valid && solve())
                     { // Recur
                         return true;
                     }
 
+                    worldBack();
+                    var.values.setvalues = backup_values;
                     // Restore the variable's values and all affected domains
-                    var.values.setvalues = backup_values; // Restore current variable's values
-                    for (size_t i = 0; i < vars.size(); ++i)
-                    {
-                        if (&vars[i] != &var)
-                            vars[i].values.setvalues = backup_domains[i]; // Restore other variables' domains
-                    }
+                    /*                     var.values.setvalues = backup_values;*/ // Restore current variable's values
+                                                                                   /*                     for (size_t i = 0; i < vars.size(); ++i)
+                                                                                                       {
+                                                                                                           if (&vars[i] != &var){
+                                                                                                           if (vars[i].values.setvalues.size() != backup_domains[i].size()){
+                                                                                                               std::cout<<"test";
+                                                                                                           }
+                                                                                                               //vars[i].values.setvalues = backup_domains[i];
+                                                                                                               } // Restore other variables' domains
+                                                                                                       } */
                 }
-
+                var.values.setvalues = var_domain_backup;
                 return false; // Return false if no value works for the current variable
             }
         }

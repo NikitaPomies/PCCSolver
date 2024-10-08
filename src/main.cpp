@@ -7,7 +7,7 @@ using namespace std;
 int main()
 {
 
-    cout << "test" << endl;
+/*     cout << "test" << endl;
 
     IntVar var("Variable1", 1, 10);
     IntVar var2("Variable2", 6, 10);
@@ -54,13 +54,14 @@ int main()
     {
         std::cout << m.vars[i].toString();
     }
-
+ */
     Model model;
-    int n = 30;
+    int n = 1000;
     // Step 1: Create variables for each row, each having domain 0 to n-1 (columns)
     for (int i = 0; i < n; i++)
-    {
-        model.vars.emplace_back("Q" + std::to_string(i), 0, n - 1);
+    {   
+        //model.vars.emplace_back("Q" + std::to_string(i), 0, n - 1);
+        model.add_var("Q" + std::to_string(i), 0, n - 1);
     }
 
     // Step 2: Add constraints: no two queens in the same column or on the same diagonal
@@ -77,6 +78,7 @@ int main()
         }
     }
     bool solved = model.solve();
+    cout <<model.are_constraints_entailed()<<std::endl;
     for (int i = 0; i < model.vars.size(); i++)
     {
         cout << "Row " << i << " -> Column " << model.vars[i].getValue() << endl;

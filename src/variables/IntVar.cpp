@@ -4,6 +4,18 @@
 #include <iostream>
 #include <stdexcept>
 #include "IntVar.h"
+#include "../memory/trails.h"
+
+IntVar::IntVar(const std::string &name, int lb, int ub, Trail &trail)
+    : name(name), LB(lb), UB(ub), trail(&trail)
+{
+
+    for (int i = LB; i <= UB; ++i)
+    {
+        values.insert(i);
+    }
+    // trail = nullptr;
+}
 
 IntVar::IntVar(const std::string &name, int lb, int ub)
     : name(name), LB(lb), UB(ub)
@@ -22,8 +34,9 @@ void IntVar::setUB(int value) { UB = value; }
 
 bool IntVar::isAssigned()
 {
-    //return LB == UB;
-    return values.setvalues.size()==1;
+    // return LB == UB;
+    //std::cout<<values.setvalues.size();
+    return values.setvalues.size() == 1;
 }
 
 int IntVar::getValue()
@@ -34,12 +47,12 @@ int IntVar::getValue()
     }
     else
     {
-       return *values.setvalues.begin();
+        return *values.setvalues.begin();
     }
 }
 bool IntVar::contains(int value)
 {
-    return  (values.contains(value));
+    return (values.contains(value));
 }
 bool IntVar::updateLB(int value)
 {
@@ -83,7 +96,8 @@ bool IntVar::removeValue(int value)
     if (canremove)
     {
         this->values.remove(value);
-
+        trail->saveDomainChange(this, value);
+        //std::cout << "Value " << value << " removed for variable " << this->name << std::endl;
     }
     return canremove;
 }
@@ -107,5 +121,3 @@ void IntVar::instantiateTo(int value)
     LB = value;
     UB = value;
 }
-
-

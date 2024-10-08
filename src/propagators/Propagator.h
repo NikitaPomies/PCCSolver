@@ -5,12 +5,12 @@ using namespace std;
 
 class BinaryPropagator
 {
-protected:
+
+
+public:
     IntVar * x;
     IntVar * y;
     string state = "NEW";
-
-public:
     virtual void propagate() = 0;
     // Another pure virtual function
     virtual bool isEntailed() = 0;
