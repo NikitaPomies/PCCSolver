@@ -35,7 +35,6 @@ void IntVar::setUB(int value) { UB = value; }
 bool IntVar::isAssigned()
 {
     // return LB == UB;
-    //std::cout<<values.setvalues.size();
     return values.setvalues.size() == 1;
 }
 
