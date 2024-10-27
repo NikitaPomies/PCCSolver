@@ -1,5 +1,5 @@
 #pragma once
-#include "../../variables/IntVar.h"
+#include "../../../variables/IntVar.h"
 using namespace std;
 
 class ValueSelector

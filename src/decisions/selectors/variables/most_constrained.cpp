@@ -17,6 +17,25 @@ IntVar &MostConstrainedVarSelector::selectVariable(vector<IntVar> &v)
         }
         }
     }
+    if (mostConstrainedVar == nullptr){
+        std::cout<<"pb"<<std::flush;
+         for (auto &var : v)
+    {
+        if(!var.isAssigned()){
+        size_t currentSize = var.values.setvalues.size();
+        if (currentSize < minSize)
+        {
+            minSize = currentSize;
+            mostConstrainedVar = &var;
+        }
+        }
+        else {
+            std::cout<<"Variable "<<var.name << " to "<< var.getValue()<<std::endl;}
+
+    }
+    std::cout<<"test";
+
+    }
 
     return *mostConstrainedVar;
 

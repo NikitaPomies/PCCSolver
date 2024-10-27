@@ -12,6 +12,7 @@
 
 #include "../utils/OrderedSet.h"
 
+class Trail;
 // Variable class
 class IntVar
 {
@@ -24,7 +25,10 @@ public:
     OrderedSet values;
     std::string name;
 
+    Trail *trail;
+
     IntVar(const std::string &name, int lb, int ub);
+    IntVar(const std::string &name, int lb, int ub, Trail &trail);
 
     bool isAssigned();
 
@@ -41,7 +45,6 @@ public:
     bool updateUB(int value);
     bool removeValue(int value);
     std::string toString();
-
 };
 
 #endif
