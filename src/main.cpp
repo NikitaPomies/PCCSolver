@@ -8,7 +8,7 @@ int main()
 {
 
     Model model;
-    int n = 500;
+    int n = 90;
     // Step 1: Create variables for each row, each having domain 0 to n-1 (columns)
     for (int i = 0; i < n; i++)
     {
@@ -29,6 +29,7 @@ int main()
             model.add_binary_cstr2(&model.vars[i], &model.vars[j], -(j - i)); // Backward diagonal
         }
     }
+    //model.AC3();
     bool solved = model.solve();
     cout << model.are_constraints_entailed() << std::endl;
     for (int i = 0; i < model.vars.size(); i++)
