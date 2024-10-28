@@ -30,20 +30,26 @@ IntVar *Model::getVarbyName(const string &name)
 
 void Model::AC3()
 {
+    cout << "Starting Ac3"<<endl;
     std::queue<BinaryPropagator *> ac_queue;
+    std::set<BinaryPropagator *> visited; // Set to track visited propagators
     for (BinaryPropagator *propagator : propagator_queue)
     {
         ac_queue.push(propagator);
+        visited.insert(propagator);
     }
+
     while (!ac_queue.empty())
     {
+
         BinaryPropagator *bp = ac_queue.front();
         ac_queue.pop();
         bool has_been_reduced = bp->ArcSupport();
         if (bp->x->values.setvalues.size() == 0)
-            cout << "issue";
-        if (has_been_reduced)
-            cout << "opopo";
+        {
+            break;
+        }
+        // throw std::runtime_error("Contradiction detected during bounds update->");
 
         if (has_been_reduced)
         {
@@ -51,12 +57,26 @@ void Model::AC3()
             {
                 // Be careful here ?
                 if (propagator->x == bp->x and propagator->y != bp->y)
-                    ac_queue.push(propagator); // Be careful here ?
+                {
+                    if (visited.find(propagator) == visited.end()) // Check if not visited
+                    {
+                        ac_queue.push(propagator);
+                        visited.insert(propagator); // Mark as visited
+                    }
+                }
                 if (propagator->x == bp->y and propagator->y != bp->x)
-                    ac_queue.push(propagator);
+                {
+                    if (visited.find(propagator) == visited.end()) // Check if not visited
+                    {
+                        ac_queue.push(propagator);
+                        visited.insert(propagator); // Mark as visited
+                    }
+                }
             }
         }
     }
+    cout << "Ending Ac3"<<endl;
+
 }
 
 void Model::worldPush()
@@ -163,6 +183,7 @@ bool Model::solve()
                     worldPush();
                     // Propagate constraints
                     propagate_constraints();
+                    //AC3();
 
                     // Check for empty domains
                     bool valid = true;
@@ -189,7 +210,6 @@ bool Model::solve()
                     { // Recur
                         return true;
                     }
-
                     stats.incrementBacktrack();
                     stats.decreaseDepth();
                     worldBack();
