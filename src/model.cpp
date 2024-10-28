@@ -14,6 +14,20 @@ void Model::add_var(const string &name, int LB, int UB)
     this->vars.emplace_back(name, LB, UB, trail);
 }
 
+IntVar *Model::getVarbyName(const string &name)
+{
+    for (auto &var : vars)
+    {
+        if (var.name == name)
+        {
+
+            return &var;
+        }
+    }
+
+    throw std::runtime_error("Model does not contain var called  " + name);
+}
+
 void Model::AC3()
 {
     std::queue<BinaryPropagator *> ac_queue;
