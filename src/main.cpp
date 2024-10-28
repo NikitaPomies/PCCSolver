@@ -8,12 +8,13 @@ using namespace std;
 
 int main()
 {
-    bool n_queens = true;
-    bool coloration = false;;
+    bool n_queens = false;
+    bool coloration = true;
+    ;
     if (n_queens)
     {
 
-        Model model = buildNQueens(500);
+        Model model = buildNQueens(200);
 
         model.AC3();
         bool solved = model.solve();
@@ -26,7 +27,7 @@ int main()
     else
     {
 
-        Model model = buildColorationModel("../data/coloration/myciel3.col", 4);
+        Model model = buildColorationModel("../data/coloration/le450_5a.col",5);
         // model.AC3();
         bool solved = model.solve();
         cout << model.are_constraints_entailed() << std::endl;
@@ -36,6 +37,8 @@ int main()
             cout << var.name << " has color : " << var.getValue() << endl;
             ;
         }
+
+        model.stats.display();
     }
 
     return 0;

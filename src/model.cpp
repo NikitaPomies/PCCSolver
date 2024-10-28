@@ -151,6 +151,9 @@ bool Model::solve()
                 {
                     int min_val = valselector.selectValue(&var);
 
+                    stats.incrementNode();
+                    stats.increaseDepth();
+
                     backup_values.erase(min_val);
                     // Assign the variable to this value
 
@@ -187,6 +190,8 @@ bool Model::solve()
                         return true;
                     }
 
+                    stats.incrementBacktrack();
+                    stats.decreaseDepth();
                     worldBack();
                     var.values.setvalues = backup_values;
                 }
