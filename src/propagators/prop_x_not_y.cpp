@@ -25,8 +25,10 @@ bool PropXnotY::isEntailed()
 
 bool PropXnotY::ArcSupport()
 {
-    bool has_reduced;
-    for (const auto x_value : x->values.setvalues)
+    bool has_reduced = false;
+    std::vector<int> values_to_remove;
+
+    for (const int x_value : x->values.setvalues)
     {
         bool have_support = false;
         for (const auto y_value : y->values.setvalues)
@@ -39,9 +41,14 @@ bool PropXnotY::ArcSupport()
         }
         if (!have_support)
         {
-            x->removeValue(x_value);
+            values_to_remove.push_back(x_value);
             has_reduced = true;
         }
     }
+    for (const int value : values_to_remove)
+    {
+        x->removeValue(value);
+    }
+
     return has_reduced;
 }

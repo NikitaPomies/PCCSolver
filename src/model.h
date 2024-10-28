@@ -12,6 +12,7 @@
 #include "decisions/selectors/variables/most_constrained.h"
 #include "decisions/selectors/variables/random.h"
 #include "memory/trails.h"
+#include "statistics.h"
 
 using namespace std;
 
@@ -22,18 +23,20 @@ class Model
 public:
     vector<IntVar> vars;
     Trail trail;
+    SearchStats stats;
     int worldIndex = 0;
     void worldPush();
     void worldBack();
     vector<BinaryPropagator *> propagator_queue;
     void add_var(const string &name, int LB, int UB);
-    IntVar* getVarbyName(const string &name);
+    IntVar *getVarbyName(const string &name);
     void add_binary_cstr(IntVar *i, IntVar *j);
     void add_binary_cstr2(IntVar *i, IntVar *j, int cste);
     void propagate_constraints();
     bool are_constraints_entailed();
     void AC3();
     bool solve();
+
     ~Model()
     {
         // Iterate through the propagator queue and delete each dynamically allocated propagator

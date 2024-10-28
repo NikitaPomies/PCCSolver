@@ -96,8 +96,9 @@ bool IntVar::removeValue(int value)
     {
         this->values.remove(value);
         trail->saveDomainChange(this, value);
-        //std::cout << "Value " << value << " removed for variable " << this->name << std::endl;
+        // std::cout << "Value " << value << " removed for variable " << this->name << std::endl;
     }
+
     return canremove;
 }
 
