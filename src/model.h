@@ -18,6 +18,7 @@ using namespace std;
 class Model
 {
     MinValueSelector selector = MinValueSelector();
+
 public:
     vector<IntVar> vars;
     Trail trail;
@@ -25,21 +26,22 @@ public:
     void worldPush();
     void worldBack();
     vector<BinaryPropagator *> propagator_queue;
-    void add_var(const string& name, int LB, int UB);
+    void add_var(const string &name, int LB, int UB);
+    IntVar* getVarbyName(const string &name);
     void add_binary_cstr(IntVar *i, IntVar *j);
     void add_binary_cstr2(IntVar *i, IntVar *j, int cste);
     void propagate_constraints();
     bool are_constraints_entailed();
-
+    void AC3();
     bool solve();
-    ~Model() {
-    // Iterate through the propagator queue and delete each dynamically allocated propagator
-    for (BinaryPropagator* propagator : propagator_queue) {
-        delete propagator;  // Free memory allocated for the propagator
+    ~Model()
+    {
+        // Iterate through the propagator queue and delete each dynamically allocated propagator
+        for (BinaryPropagator *propagator : propagator_queue)
+        {
+            delete propagator; // Free memory allocated for the propagator
+        }
+        // Optionally, clear the vector to ensure no dangling pointers remain
+        propagator_queue.clear();
     }
-    // Optionally, clear the vector to ensure no dangling pointers remain
-    propagator_queue.clear();
-}
-
-
 };

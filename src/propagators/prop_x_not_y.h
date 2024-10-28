@@ -9,4 +9,5 @@ public:
     PropXnotY(IntVar *i, IntVar *j);
     void propagate() override;
     bool isEntailed() override;
+    bool ArcSupport() override;
 };

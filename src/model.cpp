@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <functional>
+
 #include <iostream>
 #include <stdexcept>
 #include <cassert>
@@ -11,6 +12,51 @@
 void Model::add_var(const string &name, int LB, int UB)
 {
     this->vars.emplace_back(name, LB, UB, trail);
+}
+
+IntVar *Model::getVarbyName(const string &name)
+{
+    for (auto &var : vars)
+    {
+        if (var.name == name)
+        {
+
+            return &var;
+        }
+    }
+
+    throw std::runtime_error("Model does not contain var called  " + name);
+}
+
+void Model::AC3()
+{
+    std::queue<BinaryPropagator *> ac_queue;
+    for (BinaryPropagator *propagator : propagator_queue)
+    {
+        ac_queue.push(propagator);
+    }
+    while (!ac_queue.empty())
+    {
+        BinaryPropagator *bp = ac_queue.front();
+        ac_queue.pop();
+        bool has_been_reduced = bp->ArcSupport();
+        if (bp->x->values.setvalues.size() == 0)
+            cout << "issue";
+        if (has_been_reduced)
+            cout << "opopo";
+
+        if (has_been_reduced)
+        {
+            for (BinaryPropagator *propagator : propagator_queue)
+            {
+                // Be careful here ?
+                if (propagator->x == bp->x and propagator->y != bp->y)
+                    ac_queue.push(propagator); // Be careful here ?
+                if (propagator->x == bp->y and propagator->y != bp->x)
+                    ac_queue.push(propagator);
+            }
+        }
+    }
 }
 
 void Model::worldPush()
@@ -143,7 +189,7 @@ bool Model::solve()
 
                     worldBack();
                     var.values.setvalues = backup_values;
-                                }
+                }
                 var.values.setvalues = var_domain_backup;
                 return false; // Return false if no value works for the current variable
             }
