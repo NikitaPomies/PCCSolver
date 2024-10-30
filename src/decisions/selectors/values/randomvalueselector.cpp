@@ -1,7 +1,7 @@
 #include "randomvalueselector.h"
 #include <ctime>  
 
- int RandomValueSelector::selectValue(const IntVar* i) {
+ int RandomValueSelector::selectValue(IntVar* i) {
         // Seed the random number generator
         std::srand(std::time(0));
 

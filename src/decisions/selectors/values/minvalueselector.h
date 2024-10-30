@@ -5,5 +5,5 @@
 class MinValueSelector : public ValueSelector
 {
 public:
-    int selectValue(const IntVar *i) override;
+    int selectValue( IntVar *i) override;
 };
