@@ -10,6 +10,7 @@
 #include "decisions/selectors/values/minvalueselector.h"
 #include "decisions/selectors/values/randomvalueselector.h"
 #include "decisions/selectors/values/leastconstrainedvalueselector.h"
+#include "decisions/selectors/values/hybridvalueselector.h"
 #include "decisions/selectors/variables/most_constrained.h"
 #include "decisions/selectors/variables/random.h"
 #include "memory/trails.h"
@@ -26,8 +27,9 @@ public:
 
     MostConstrainedVarSelector varselector;
     //MinValueSelector valselector;
-    RandomValueSelector valselector;
-    //sLeastConstrainingValue valselector;
+    //RandomValueSelector valselector;
+    //LeastConstrainingValue valselector;
+    HybridSelector valselector;
 
     int worldIndex = 0;
     void worldPush();
@@ -42,6 +44,7 @@ public:
     bool are_constraints_entailed();
     void AC3();
     bool solve();
+    bool findSolution();
     Model();
 
     ~Model()
@@ -55,3 +58,4 @@ public:
         propagator_queue.clear();
     }
 };
+

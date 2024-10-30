@@ -55,7 +55,7 @@ void Model::AC3()
 
         if (has_been_reduced)
         {
-            cout<<"Presolving making effective reduction"<<endl;
+            cout << "Presolving making effective reduction" << endl;
             for (BinaryPropagator *propagator : propagator_queue)
             {
                 // Be careful here ?
@@ -133,8 +133,6 @@ bool Model::are_constraints_entailed()
     {
         if (!prop->isEntailed())
         {
-            // std::cout<<prop->x->name<<"  "<<prop->y->name<<std::endl;
-            // std::cout<<&prop->x<<"  "<<&prop->y->name<<std::endl;
             return false; // Return false if any propagator is not entailed
         }
     }
@@ -162,7 +160,7 @@ bool Model::solve()
         std::cout << "mauvaise assignation" << std::endl;
         return false;
     }
-   
+
     // Select the first unassigned variable
     for (int i = 0; i < vars.size(); i++)
     {
@@ -195,8 +193,8 @@ bool Model::solve()
                     worldPush();
                     // Propagate constraints
                     propagate_constraints();
-                    //forward_checking(&var);
-                    // AC3();
+                    // forward_checking(&var);
+                    //  AC3();
 
                     // Check for empty domains
                     bool valid = true;
@@ -205,16 +203,6 @@ bool Model::solve()
                         if (v.values.setvalues.empty())
                         {
                             valid = false;
-                            break;
-                        }
-                    }
-
-                    bool alltest = true;
-                    for (auto &var : vars)
-                    {
-                        if (!var.isAssigned())
-                        {
-                            alltest = false;
                             break;
                         }
                     }
@@ -234,9 +222,28 @@ bool Model::solve()
         }
         catch (const std::runtime_error)
         {
+            cout << "Error detected during search" << endl;
             return false;
         }
     }
 
     return false; // Fallback return
+}
+
+bool Model::findSolution()
+{
+
+    // Initialization
+
+    std::srand(std::time(0));
+
+    stats.startTimer();
+    //Resolution
+    bool solved = solve();
+
+    //Statistiques
+
+    stats.display();
+
+    return solved;
 }

@@ -2,8 +2,6 @@
 #include <ctime>  
 
  int RandomValueSelector::selectValue(IntVar* i) {
-        // Seed the random number generator
-        std::srand(std::time(0));
 
         // Get the set from values.setvalues
         const std::set<int>& valueSet = i->values.setvalues;
