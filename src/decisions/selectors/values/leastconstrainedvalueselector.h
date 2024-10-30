@@ -1,8 +1,9 @@
 #pragma once
 
 #include "valueselector.h"
+#include <climits>
 
-class RandomValueSelector : public ValueSelector
+class LeastConstrainingValue : public ValueSelector
 {
 public:
     using ValueSelector::ValueSelector;

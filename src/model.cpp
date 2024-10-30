@@ -9,6 +9,8 @@
 #include <cassert>
 #include "model.h"
 
+Model::Model() : valselector(this) {}
+
 void Model::add_var(const string &name, int LB, int UB)
 {
     this->vars.emplace_back(name, LB, UB, trail);
@@ -30,7 +32,7 @@ IntVar *Model::getVarbyName(const string &name)
 
 void Model::AC3()
 {
-    cout << "Starting Ac3"<<endl;
+    cout << "Starting Ac3" << endl;
     std::queue<BinaryPropagator *> ac_queue;
     std::set<BinaryPropagator *> visited; // Set to track visited propagators
     for (BinaryPropagator *propagator : propagator_queue)
@@ -53,6 +55,7 @@ void Model::AC3()
 
         if (has_been_reduced)
         {
+            cout<<"Presolving making effective reduction"<<endl;
             for (BinaryPropagator *propagator : propagator_queue)
             {
                 // Be careful here ?
@@ -75,8 +78,7 @@ void Model::AC3()
             }
         }
     }
-    cout << "Ending Ac3"<<endl;
-
+    cout << "Ending Ac3" << endl;
 }
 
 void Model::worldPush()
@@ -106,9 +108,22 @@ void Model::add_binary_cstr2(IntVar *i, IntVar *j, int cste)
 void Model::propagate_constraints()
 
 {
-    for (auto prop : propagator_queue)
+    for (const auto &prop : propagator_queue)
     {
         prop->propagate();
+    }
+}
+
+void Model::forward_checking(const IntVar *var)
+{
+
+    for (const auto &propagator : propagator_queue)
+    {
+        // Be careful here ?
+        if (propagator->x == var or propagator->y == var)
+        {
+            propagator->propagate();
+        }
     }
 }
 
@@ -147,10 +162,7 @@ bool Model::solve()
         std::cout << "mauvaise assignation" << std::endl;
         return false;
     }
-    // RandomVariableSelector varselector;
-    MostConstrainedVarSelector varselector;
-    // MinValueSelector valselector;
-    RandomValueSelector valselector;
+   
     // Select the first unassigned variable
     for (int i = 0; i < vars.size(); i++)
     {
@@ -183,7 +195,8 @@ bool Model::solve()
                     worldPush();
                     // Propagate constraints
                     propagate_constraints();
-                    //AC3();
+                    //forward_checking(&var);
+                    // AC3();
 
                     // Check for empty domains
                     bool valid = true;

@@ -8,15 +8,15 @@ using namespace std;
 
 int main()
 {
-    bool n_queens = true;
-    bool coloration = false;
+    bool n_queens = false;
+    bool coloration = true;
     ;
     if (n_queens)
     {
 
-        Model model = buildNQueens(500);
+        Model model = buildNQueens(200);
 
-        // model.AC3();
+        //model.AC3();
         bool solved = model.solve();
         cout << model.are_constraints_entailed() << std::endl;
         for (int i = 0; i < model.vars.size(); i++)
@@ -28,8 +28,8 @@ int main()
     else
     {
 
-        Model model = buildColorationModel("../data/coloration/le450_5a.col", 5);
-        // model.AC3();
+        Model model = buildColorationModel("../data/coloration/le450_15d.col", 15);
+        model.AC3();
         bool solved = model.solve();
         cout << model.are_constraints_entailed() << std::endl;
 

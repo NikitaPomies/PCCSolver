@@ -9,6 +9,7 @@
 #include "propagators/prop_x_not_yc.h"
 #include "decisions/selectors/values/minvalueselector.h"
 #include "decisions/selectors/values/randomvalueselector.h"
+#include "decisions/selectors/values/leastconstrainedvalueselector.h"
 #include "decisions/selectors/variables/most_constrained.h"
 #include "decisions/selectors/variables/random.h"
 #include "memory/trails.h"
@@ -18,12 +19,16 @@ using namespace std;
 
 class Model
 {
-    MinValueSelector selector = MinValueSelector();
-
 public:
     vector<IntVar> vars;
     Trail trail;
     SearchStats stats;
+
+    MostConstrainedVarSelector varselector;
+    // MinValueSelector valselector;
+    RandomValueSelector valselector;
+    //LeastConstrainingValue valselector;
+
     int worldIndex = 0;
     void worldPush();
     void worldBack();
@@ -33,9 +38,11 @@ public:
     void add_binary_cstr(IntVar *i, IntVar *j);
     void add_binary_cstr2(IntVar *i, IntVar *j, int cste);
     void propagate_constraints();
+    void forward_checking(const IntVar *var);
     bool are_constraints_entailed();
     void AC3();
     bool solve();
+    Model();
 
     ~Model()
     {

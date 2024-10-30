@@ -1,6 +1,6 @@
 #include "minvalueselector.h"
 
-int MinValueSelector::selectValue(const IntVar * i){
+int MinValueSelector::selectValue(IntVar * i){
 
     //The set is always sorted
     return *i->values.setvalues.begin();
