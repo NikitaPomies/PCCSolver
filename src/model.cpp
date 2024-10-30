@@ -34,7 +34,7 @@ void Model::AC3()
 {
     cout << "Starting Ac3" << endl;
     std::queue<BinaryPropagator *> ac_queue;
-    std::set<BinaryPropagator *> visited; // Set to track visited propagators
+    std::unordered_set<BinaryPropagator *> visited; // Set to track visited propagators
     for (BinaryPropagator *propagator : propagator_queue)
     {
         ac_queue.push(propagator);
@@ -55,7 +55,7 @@ void Model::AC3()
 
         if (has_been_reduced)
         {
-            cout << "Presolving making effective reduction" << endl;
+            // cout << "Presolving making effective reduction" << endl;
             for (BinaryPropagator *propagator : propagator_queue)
             {
                 // Be careful here ?
@@ -78,7 +78,7 @@ void Model::AC3()
             }
         }
     }
-    cout << "Ending Ac3" << endl;
+    // cout << "Ending Ac3" << endl;
 }
 
 void Model::worldPush()
@@ -194,7 +194,7 @@ bool Model::solve()
                     // Propagate constraints
                     propagate_constraints();
                     // forward_checking(&var);
-                    //  AC3();
+                    // AC3();
 
                     // Check for empty domains
                     bool valid = true;
@@ -238,10 +238,10 @@ bool Model::findSolution()
     std::srand(std::time(0));
 
     stats.startTimer();
-    //Resolution
+    // Resolution
     bool solved = solve();
 
-    //Statistiques
+    // Statistiques
 
     stats.display();
 

@@ -15,6 +15,7 @@
 #include "decisions/selectors/variables/random.h"
 #include "memory/trails.h"
 #include "statistics.h"
+#include <unordered_set>
 
 using namespace std;
 
