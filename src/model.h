@@ -25,9 +25,9 @@ public:
     SearchStats stats;
 
     MostConstrainedVarSelector varselector;
-    // MinValueSelector valselector;
+    //MinValueSelector valselector;
     RandomValueSelector valselector;
-    //LeastConstrainingValue valselector;
+    //sLeastConstrainingValue valselector;
 
     int worldIndex = 0;
     void worldPush();
