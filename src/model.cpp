@@ -187,7 +187,6 @@ bool Model::solve()
                     backup_values.erase(min_val);
                     // Assign the variable to this value
 
-                    int trailLevel = trail.getCurrentLevel();
 
                     var.instantiateTo(min_val);
                     worldPush();
