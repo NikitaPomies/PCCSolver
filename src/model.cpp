@@ -34,7 +34,7 @@ void Model::AC3()
 {
     cout << "Starting Ac3" << endl;
     std::queue<BinaryPropagator *> ac_queue;
-    std::set<BinaryPropagator *> visited; // Set to track visited propagators
+    std::unordered_set<BinaryPropagator *> visited; // Set to track visited propagators
     for (BinaryPropagator *propagator : propagator_queue)
     {
         ac_queue.push(propagator);
@@ -55,7 +55,7 @@ void Model::AC3()
 
         if (has_been_reduced)
         {
-            cout<<"Presolving making effective reduction"<<endl;
+            // cout << "Presolving making effective reduction" << endl;
             for (BinaryPropagator *propagator : propagator_queue)
             {
                 // Be careful here ?
@@ -78,7 +78,7 @@ void Model::AC3()
             }
         }
     }
-    cout << "Ending Ac3" << endl;
+    // cout << "Ending Ac3" << endl;
 }
 
 void Model::worldPush()
@@ -133,8 +133,6 @@ bool Model::are_constraints_entailed()
     {
         if (!prop->isEntailed())
         {
-            // std::cout<<prop->x->name<<"  "<<prop->y->name<<std::endl;
-            // std::cout<<&prop->x<<"  "<<&prop->y->name<<std::endl;
             return false; // Return false if any propagator is not entailed
         }
     }
@@ -162,7 +160,7 @@ bool Model::solve()
         std::cout << "mauvaise assignation" << std::endl;
         return false;
     }
-   
+
     // Select the first unassigned variable
     for (int i = 0; i < vars.size(); i++)
     {
@@ -189,13 +187,12 @@ bool Model::solve()
                     backup_values.erase(min_val);
                     // Assign the variable to this value
 
-                    int trailLevel = trail.getCurrentLevel();
 
                     var.instantiateTo(min_val);
                     worldPush();
                     // Propagate constraints
                     propagate_constraints();
-                    //forward_checking(&var);
+                    // forward_checking(&var);
                     // AC3();
 
                     // Check for empty domains
@@ -205,16 +202,6 @@ bool Model::solve()
                         if (v.values.setvalues.empty())
                         {
                             valid = false;
-                            break;
-                        }
-                    }
-
-                    bool alltest = true;
-                    for (auto &var : vars)
-                    {
-                        if (!var.isAssigned())
-                        {
-                            alltest = false;
                             break;
                         }
                     }
@@ -234,9 +221,28 @@ bool Model::solve()
         }
         catch (const std::runtime_error)
         {
+            cout << "Error detected during search" << endl;
             return false;
         }
     }
 
     return false; // Fallback return
+}
+
+bool Model::findSolution()
+{
+
+    // Initialization
+
+    std::srand(std::time(0));
+
+    stats.startTimer();
+    // Resolution
+    bool solved = solve();
+
+    // Statistiques
+
+    stats.display();
+
+    return solved;
 }
