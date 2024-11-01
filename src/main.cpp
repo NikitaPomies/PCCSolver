@@ -28,17 +28,17 @@ int main()
 
     else
     {
-
-        Model model = buildColorationModel("../data/coloration/le450_15d.col", 15);
+        string name = "../data/coloration/le450_15b.col";
+        Model model = buildColorationModel(name, 15);
         model.AC3();
         bool solved = model.findSolution();
         cout << model.are_constraints_entailed() << std::endl;
-
-        for (IntVar &var : model.vars)
+        cout<<name<<endl;
+        /* for (IntVar &var : model.vars)
         {
             cout << var.name << " has color : " << var.getValue() << endl;
             ;
-        }
+        } */
     }
 
     return 0;

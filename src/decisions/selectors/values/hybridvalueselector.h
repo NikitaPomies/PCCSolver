@@ -8,7 +8,7 @@ class HybridSelector : public ValueSelector
 private:
     RandomValueSelector randomSelector;        // Random value selector instance
     LeastConstrainingValue lcvSelector;        // Least constraining value selector instance
-    const int threshold = 20;                  // Threshold for switching heuristics
+    const int threshold = 10;                  // Threshold for switching heuristics
 
 public:
     using ValueSelector::ValueSelector;
